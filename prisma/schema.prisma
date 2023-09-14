@@ -1,0 +1,154 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model billboard {
+  id          BigInt      @id @default(autoincrement())
+  create_at   DateTime?   @db.Timestamp(6)
+  image_url   String?     @db.VarChar(255)
+  label       String?     @db.VarChar(255)
+  update_at   DateTime?   @db.Timestamp(6)
+  category_id BigInt?
+  store_id    BigInt?
+  categories  categories? @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk1ckbb8919w6uu7kex00d8fdn")
+  store       store?      @relation(fields: [store_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk8dn6yafr5et2sb4hvnfj5i9g1")
+}
+
+model categories {
+  id               BigInt             @id @default(autoincrement())
+  created_at       DateTime           @db.Timestamp(6)
+  name             String             @db.VarChar(255)
+  updated_at       DateTime?          @db.Timestamp(6)
+  store_id         BigInt
+  billboard        billboard[]
+  store            store              @relation(fields: [store_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fkpq1rrk85xcdwf8socc6prhkm3")
+  product_category product_category[]
+}
+
+model colors {
+  id            BigInt          @id @default(autoincrement())
+  created_at    DateTime        @db.Timestamp(6)
+  name          String          @db.VarChar(255)
+  updated_at    DateTime?       @db.Timestamp(6)
+  value         String          @db.VarChar(255)
+  store_id      BigInt
+  store         store           @relation(fields: [store_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk9ntn4atxn12170x4bynglujj3")
+  product_color product_color[]
+}
+
+model images {
+  id         BigInt    @id @default(autoincrement())
+  created_at DateTime  @db.Timestamp(6)
+  updated_at DateTime? @db.Timestamp(6)
+  url        String    @db.VarChar(255)
+  product_id BigInt
+  products   products  @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fkghwsjbjo7mg3iufxruvq6iu3q")
+}
+
+model product_category {
+  id          BigInt      @id @default(autoincrement())
+  category_id BigInt?
+  product_id  BigInt?
+  store_id    BigInt?
+  store       store?      @relation(fields: [store_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk5mgiulv3ujobf8du8pqbq3yjo")
+  products    products?   @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk5w81wp3eyugvi2lii94iao3fm")
+  categories  categories? @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fkdswxvx2nl2032yjv609r29sdr")
+}
+
+model product_color {
+  id         BigInt    @id @default(autoincrement())
+  color_id   BigInt?
+  product_id BigInt?
+  store_id   BigInt?
+  products   products? @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fkjs0ht7btbgt5u0jpossmgvfk5")
+  store      store?    @relation(fields: [store_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fkof8r2dgk9wegx2jwapq0qmkjw")
+  colors     colors?   @relation(fields: [color_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fkpk6riqswj8f8ldulumm9hmpq")
+}
+
+model product_size {
+  id         BigInt    @id @default(autoincrement())
+  product_id BigInt?
+  size_id    BigInt?
+  store_id   BigInt?
+  sizes      sizes?    @relation(fields: [size_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk1yl8bbmokvonm64131xlscnci")
+  products   products? @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk9qjgp0xvl5jfetdt683i7wqwr")
+  store      store?    @relation(fields: [store_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fkdotp6riw7ksp59ivcdj4kxvnv")
+}
+
+model products {
+  id               BigInt             @id @default(autoincrement())
+  created_at       DateTime           @db.Timestamp(6)
+  is_archived      Boolean?
+  is_featured      Boolean?
+  name             String?            @db.VarChar(255)
+  price            Float?
+  updated_at       DateTime?          @db.Timestamp(6)
+  store_id         BigInt
+  images           images[]
+  product_category product_category[]
+  product_color    product_color[]
+  product_size     product_size[]
+  store            store              @relation(fields: [store_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fkj6t0t0nb9wyi1fjyacp5643n9")
+  OrderItem        order_item[]
+}
+
+model sizes {
+  id           BigInt         @id @default(autoincrement())
+  created_at   DateTime       @db.Timestamp(6)
+  name         String         @db.VarChar(255)
+  updated_at   DateTime?      @db.Timestamp(6)
+  value        String         @db.VarChar(255)
+  store_id     BigInt
+  product_size product_size[]
+  store        store          @relation(fields: [store_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fkm250yqqlyfss91qqk7e2wqsx")
+}
+
+model store {
+  id               BigInt             @id @default(autoincrement())
+  created_at       DateTime?          @db.Timestamp(6)
+  name             String?            @db.VarChar(255)
+  updated_at       DateTime?          @db.Timestamp(6)
+  user_email       String?            @db.VarChar(255)
+  billboard        billboard[]
+  categories       categories[]
+  colors           colors[]
+  product_category product_category[]
+  product_color    product_color[]
+  product_size     product_size[]
+  products         products[]
+  sizes            sizes[]
+  order            order[]
+}
+
+//-----------------------------
+
+model order {
+  id         BigInt       @id @default(autoincrement())
+  storeId    BigInt // Foreign Key to Store
+  orderItems order_item[] // Relation to OrderItem model
+  isPaid     Boolean      @default(false)
+  phone      String       @default("")
+  address    String       @default("")
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  store      store        @relation(fields: [storeId], references: [id])
+
+  @@index([storeId])
+}
+
+// Intermediary for a many-to-many relationship
+model order_item {
+  id        BigInt   @id @default(autoincrement())
+  orderId   BigInt // Foreign Key to Order
+  order     order    @relation(fields: [orderId], references: [id])
+  productId BigInt // Foreign Key to Product
+  product   products @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+}

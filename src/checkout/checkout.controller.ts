@@ -17,6 +17,7 @@ export class CheckoutController {
 
   @Post()
   async initiateOrder(@Body() productIds: CreateOrderDto) {
+    //TODO WHERE ARE THE SIZES AND COLORS AND EVERYTHING??
     return await this.checkoutService.createOrderByProductIds(productIds);
   }
 

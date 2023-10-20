@@ -2,7 +2,6 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { StripeService } from 'src/stripe/stripe.service';
 import { CreateOrderDto } from './dto';
-import { products } from '@prisma/client';
 import Stripe from 'stripe';
 
 @Injectable()
@@ -14,11 +13,6 @@ export class CheckoutService {
 
   private lineItems = this.stripeService.getLineItems();
   private event = this.stripeService.getEvent();
-  private calculateOrderAmount(products: products[]) {
-    return products.reduce((acc, current) => {
-      return acc + current.price;
-    }, 0);
-  }
 
   async createOrderByProductIds(createOrderDto: CreateOrderDto) {
     const products = await this.prisma.products.findMany({

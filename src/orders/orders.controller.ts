@@ -9,7 +9,7 @@ export class OrderController {
   async getSalesCount(@Query('storeId') storeId: number) {
     return await this.orderService.getSalesCount(storeId);
   }
-  
+
   @Get('/total-revenue')
   async getTotalRevenue(@Query('storeId') storeId: number) {
     return await this.orderService.getTotalRevenue(storeId);

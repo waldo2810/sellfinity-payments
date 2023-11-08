@@ -80,7 +80,7 @@ export class OrderService {
       }
 
       // Converting the grouped data into the format expected by the graph
-      const graphData  = [
+      const graphData = [
         { name: 'Jan', total: 0 },
         { name: 'Feb', total: 0 },
         { name: 'Mar', total: 0 },

@@ -14,11 +14,11 @@ export class CheckoutService {
   private lineItems = this.stripeService.getLineItems();
   private event = this.stripeService.getEvent();
 
-  async createOrderByProductIds(createOrderDto: CreateOrderDto) {
+  async createOrder(createOrderDto: CreateOrderDto) {
     const products = await this.prisma.products.findMany({
       where: {
         id: {
-          in: createOrderDto.productIds,
+          in: createOrderDto.items.map((item) => item.product.id),
         },
       },
     });
@@ -41,13 +41,15 @@ export class CheckoutService {
         storeId: createOrderDto.storeId,
         isPaid: false,
         orderItems: {
-          create: createOrderDto.productIds.map((productId: number) => ({
-            product: {
-              connect: {
-                id: productId,
+          create: createOrderDto.items
+            .map((item) => item.product.id)
+            .map((productId: number) => ({
+              product: {
+                connect: {
+                  id: productId,
+                },
               },
-            },
-          })),
+            })),
         },
       },
     });
@@ -59,15 +61,14 @@ export class CheckoutService {
       phone_number_collection: {
         enabled: true,
       },
-      success_url: `${process.env.FRONTEND_STORE_URL}/cart?success=1`,
-      cancel_url: `${process.env.FRONTEND_STORE_URL}/cart?canceled=1`,
+      success_url: `${process.env.FRONTEND_STORE_URL}/${createOrderDto.storeId}/cart?success=1`,
+      cancel_url: `${process.env.FRONTEND_STORE_URL}/${createOrderDto.storeId}/cart?canceled=1`,
       metadata: {
         orderId: order.id.toString(),
       },
     });
 
-    return { session };
-    // return { url: session.url }; TODO DO WHEN FRONT IS READY
+    return { url: session.url };
   }
 
   async completeOrder(payload: Buffer, signature: string) {

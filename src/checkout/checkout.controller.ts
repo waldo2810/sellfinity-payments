@@ -16,9 +16,8 @@ export class CheckoutController {
   constructor(private checkoutService: CheckoutService) {}
 
   @Post()
-  async initiateOrder(@Body() productIds: CreateOrderDto) {
-    //TODO WHERE ARE THE SIZES AND COLORS AND EVERYTHING??
-    return await this.checkoutService.createOrderByProductIds(productIds);
+  async initiateOrder(@Body() items: CreateOrderDto) {
+    return await this.checkoutService.createOrder(items);
   }
 
   @Post('/webhook')

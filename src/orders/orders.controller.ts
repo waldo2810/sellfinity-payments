@@ -3,7 +3,12 @@ import { OrderService } from './orders.service';
 
 @Controller('/orders')
 export class OrderController {
-  constructor(private orderService: OrderService) {}
+  constructor(private orderService: OrderService) { }
+
+  @Get()
+  async getOrders(@Query('storeId') storeId: number) {
+    return await this.orderService.getOrders(storeId);
+  }
 
   @Get('/sales-count')
   async getSalesCount(@Query('storeId') storeId: number) {

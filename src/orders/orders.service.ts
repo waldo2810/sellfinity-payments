@@ -3,7 +3,33 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class OrderService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
+
+  private convertBigIntToString(value: any): any {
+    if (typeof value === 'bigint') {
+      return Number(value);
+    }
+    if (typeof value === 'object') {
+      for (const key in value) {
+        value[key] = this.convertBigIntToString(value[key]);
+      }
+    }
+    return value;
+  }
+
+  async getOrders(@Query('storeId') storeId: number) {
+    try {
+      const orders = await this.prisma.order.findMany({
+        where: { storeId },
+        include: { orderItems: { include: { product: true } } },
+        orderBy: { createdAt: 'desc' },
+      });
+      const ordersWithStrings = this.convertBigIntToString(orders);
+      return ordersWithStrings;
+    } catch (error: unknown) {
+      throw new BadRequestException(error);
+    }
+  }
 
   async getSalesCount(@Query('storeId') storeId: number) {
     try {

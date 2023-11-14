@@ -10,7 +10,6 @@ import {
 import { Request } from 'express';
 import { CheckoutService } from './checkout.service';
 import { CreateOrderDto } from './dto';
-import { Payment } from 'mercadopago/dist/clients/point/commonTypes';
 
 @Controller('checkout')
 export class CheckoutController {
@@ -27,7 +26,7 @@ export class CheckoutController {
     }
   }
 
-  @Post('/webhookkk')
+  @Post('/webhook/stripe')
   async completeOrder(
     @Req() req: RawBodyRequest<Request>,
     @Headers('Stripe-Signature') signature: string,
@@ -39,7 +38,7 @@ export class CheckoutController {
     return await this.checkoutService.completeOrder(raw, signature);
   }
 
-  @Post('/webhook')
+  @Post('/webhook/mercadopago')
   async completeMercadoPagoOrder(@Body() payment: any) {
     return await this.checkoutService.completeMercadoPagoOrder(payment);
   }

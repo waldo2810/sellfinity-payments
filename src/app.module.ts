@@ -4,6 +4,7 @@ import { CheckoutModule } from './checkout/checkout.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { StripeModule } from './stripe/stripe.module';
 import { OrdersModule } from './orders/orders.module';
+import { MercadoPagoModule } from './mercadopago/mercadopago.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { OrdersModule } from './orders/orders.module';
     PrismaModule,
     StripeModule,
     OrdersModule,
+    MercadoPagoModule
   ],
 })
-export class AppModule {}
+export class AppModule { }

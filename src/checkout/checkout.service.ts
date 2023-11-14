@@ -80,6 +80,7 @@ export class CheckoutService {
   }
 
   async createMercadoPagoOrder(createOrderDto: CreateOrderDto) {
+    console.log('///////////////////////////////////////////init start');
     const products = await this.productRepo.getProducts(createOrderDto.items);
     const order = await this.orderRepo.saveOrder(
       createOrderDto.storeId,
@@ -90,12 +91,13 @@ export class CheckoutService {
       createOrderDto.storeId,
       order.id.toString(),
     );
-    console.log(preference);
+    console.log('PREFERENCE: ', preference);
+    console.log('///////////////////////////////////////////init end');
     return { url: preference.init_point };
   }
 
   async completeMercadoPagoOrder(payment: PaymentEvent) {
-    console.log('///////////////////////////////////////////start');
+    console.log('///////////////////////////////////////////webhook start');
     try {
       console.log('PAYMENT EVENT: ', payment);
       if (payment.type === 'payment') {
@@ -120,7 +122,7 @@ export class CheckoutService {
           },
         });
       }
-      console.log('///////////////////////////////////////////end');
+      console.log('///////////////////////////////////////////webhook end');
       return { status: 200 };
     } catch (error) {
       if (error instanceof Error) throw new BadRequestException(error.message);

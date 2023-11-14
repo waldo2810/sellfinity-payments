@@ -30,7 +30,7 @@ export class MercadoPagoService {
         quantity: 1,
         unit_price: product.price,
       })),
-      notification_url: 'https://db71-186-168-163-186.ngrok-free.app/checkout/webhook',
+      notification_url: process.env.MERCADOPAGO_NOTIFICATION_URL,
       back_urls: {
         success: `${process.env.FRONTEND_STORE_URL}/${storeId}/cart?success=1`,
         failure: `${process.env.FRONTEND_STORE_URL}/${storeId}/cart?canceled=1`,

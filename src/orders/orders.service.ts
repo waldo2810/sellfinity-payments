@@ -17,6 +17,26 @@ export class OrderService {
     return value;
   }
 
+  async createOrder(storeId: number, items: any) {
+    return await this.prisma.order.create({
+      data: {
+        storeId: storeId,
+        isPaid: false,
+        orderItems: {
+          create: items
+            .map((item) => item.product.id)
+            .map((productId: number) => ({
+              product: {
+                connect: {
+                  id: productId,
+                },
+              },
+            })),
+        },
+      },
+    });
+  }
+
   async getOrders(@Query('storeId') storeId: number) {
     try {
       const orders = await this.prisma.order.findMany({

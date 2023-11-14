@@ -15,8 +15,36 @@ export class StripeService {
     });
   }
 
-  public getLineItems() {
-    return this.lineItems;
+  public saveToLineItems(products: any) {
+    products.forEach((product) => {
+      this.lineItems.push({
+        quantity: 1,
+        price_data: {
+          currency: 'COP',
+          product_data: {
+            name: product.name,
+          },
+          unit_amount: product.price * 100,
+        },
+      });
+    });
+  }
+
+  public createCheckoutSession(storeId: number, orderId: string) {
+    const session = this.stripe.checkout.sessions.create({
+      line_items: this.lineItems,
+      mode: 'payment',
+      billing_address_collection: 'required',
+      phone_number_collection: {
+        enabled: true,
+      },
+      success_url: `${process.env.FRONTEND_STORE_URL}/${storeId}/cart?success=1`,
+      cancel_url: `${process.env.FRONTEND_STORE_URL}/${storeId}/cart?canceled=1`,
+      metadata: {
+        orderId: orderId,
+      },
+    });
+    return session;
   }
 
   public getEvent() {

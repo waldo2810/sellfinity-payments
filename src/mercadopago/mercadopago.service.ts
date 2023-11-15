@@ -30,7 +30,7 @@ export class MercadoPagoService {
         quantity: 1,
         unit_price: product.price,
       })),
-      // notification_url: process.env.MERCADOPAGO_NOTIFICATION_URL,
+      notification_url: process.env.MERCADOPAGO_NOTIFICATION_URL,
       back_urls: {
         success: `${process.env.FRONTEND_STORE_URL}/${storeId}/cart?success=1`,
         failure: `${process.env.FRONTEND_STORE_URL}/${storeId}/cart?canceled=1`,

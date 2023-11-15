@@ -80,7 +80,6 @@ export class CheckoutService {
   }
 
   async createMercadoPagoOrder(createOrderDto: CreateOrderDto) {
-    console.log('///////////////////////////////////////////init start');
     const products = await this.productRepo.getProducts(createOrderDto.items);
     const order = await this.orderRepo.saveOrder(
       createOrderDto.storeId,
@@ -91,8 +90,6 @@ export class CheckoutService {
       createOrderDto.storeId,
       order.id.toString(),
     );
-    console.log('PREFERENCE: ', preference);
-    console.log('///////////////////////////////////////////init end');
     return { url: preference.init_point };
   }
 
@@ -104,6 +101,7 @@ export class CheckoutService {
           id: payment.data.id,
         });
         console.log('RETURNED PAYMENT: ', data);
+        console.log('METADATA: ', data?.metadata)
 
         await this.prisma.order.update({
           where: {

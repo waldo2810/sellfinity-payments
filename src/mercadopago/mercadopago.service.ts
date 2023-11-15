@@ -24,11 +24,12 @@ export class MercadoPagoService {
     orderId: string,
   ) {
     const preferenceBody: PreferenceRequest = {
-      items: products.map((product) => ({
+      items: products.map((product: any) => ({
         id: product.id.toString(),
         title: product.name,
         quantity: 1,
         unit_price: product.price,
+        currency_id: 'COP',
       })),
       notification_url: process.env.MERCADOPAGO_NOTIFICATION_URL,
       back_urls: {
@@ -37,6 +38,7 @@ export class MercadoPagoService {
       },
       metadata: { orderId },
     };
+    console.log('PREFERENCE BEING CREATED: ', preferenceBody)
     return await this.preference.create({ body: preferenceBody });
   }
   public getPreference() {

@@ -39,8 +39,7 @@ export class CheckoutController {
   }
 
   @Post('/webhook/mercadopago')
-  async completeMercadoPagoOrder(@Req() req: RawBodyRequest<Request>) {
-    const payment = req.rawBody; // returns a `Buffer`.
+  async completeMercadoPagoOrder(@Body() payment: any) {
     return await this.checkoutService.completeMercadoPagoOrder(payment);
   }
 }

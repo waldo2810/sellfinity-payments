@@ -99,7 +99,6 @@ export class CheckoutService {
   async completeMercadoPagoOrder(payment: PaymentEvent) {
     console.log('///////////////////////////////////////////webhook start');
     try {
-      console.log('PAYMENT EVENT: ', payment);
       if (payment.type === 'payment') {
         const data: PaymentResponse = await this.payment.get({
           id: payment.data.id,
@@ -116,6 +115,7 @@ export class CheckoutService {
               data.additional_info.shipments.receiver_address,
             ),
             phone: buildMercadoPagoPhone(data?.payer?.phone) || '',
+            email: data.payer.email,
           },
           include: {
             orderItems: true,

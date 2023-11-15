@@ -38,7 +38,6 @@ export class MercadoPagoService {
       },
       metadata: { orderId },
     };
-    console.log('PREFERENCE BEING CREATED: ', preferenceBody)
     return await this.preference.create({ body: preferenceBody });
   }
   public getPreference() {

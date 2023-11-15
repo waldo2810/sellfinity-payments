@@ -107,7 +107,7 @@ export class CheckoutService {
 
         await this.prisma.order.update({
           where: {
-            id: Number(data?.metadata?.orderId),
+            id: Number(data?.metadata?.order_id),
           },
           data: {
             isPaid: true,

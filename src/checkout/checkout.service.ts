@@ -96,7 +96,8 @@ export class CheckoutService {
     return { url: preference.init_point };
   }
 
-  async completeMercadoPagoOrder(payment: PaymentEvent) {
+  // async completeMercadoPagoOrder(payment: PaymentEvent) {
+  async completeMercadoPagoOrder(payment: any) {
     console.log('///////////////////////////////////////////webhook start');
     try {
       console.log('PAYMENT EVENT: ', payment);

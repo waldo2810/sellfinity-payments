@@ -15,8 +15,18 @@ import { CreateOrderDto } from './dto';
 export class CheckoutController {
   constructor(private checkoutService: CheckoutService) { }
 
-  @Post()
+  @Post('/create/stripe')
   async initiateOrder(@Body() items: CreateOrderDto) {
+    try {
+      return await this.checkoutService.createOrder(items);
+    } catch (error) {
+      console.log(error);
+      throw new BadRequestException();
+    }
+  }
+
+  @Post('/create/mercadopago')
+  async initiateMercadoPagoOrder(@Body() items: CreateOrderDto) {
     // return await this.checkoutService.createOrder(items);
     try {
       return await this.checkoutService.createMercadoPagoOrder(items);

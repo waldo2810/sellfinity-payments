@@ -70,6 +70,7 @@ export class CheckoutService {
         data: {
           isPaid: true,
           address: buildStripeAddress(address),
+          email: session?.customer_details.email || '',
           phone: session?.customer_details?.phone || '',
         },
         include: { orderItems: true },

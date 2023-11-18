@@ -51,6 +51,7 @@ export class CheckoutService {
   }
 
   async completeOrder(payload: Buffer, signature: string) {
+    console.log('///////////////////////////////////////////webhook start');
     try {
       this.event = this.stripeService.stripe.webhooks.constructEvent(
         payload,
@@ -63,9 +64,10 @@ export class CheckoutService {
 
     const session = this.event.data.object as Stripe.Checkout.Session;
     const address = session?.customer_details?.address;
+    console.log('STRIPE SESSSION: ', session);
 
     if (this.event.type === 'checkout.session.completed') {
-      await this.prisma.order.update({
+      const updatedOrder = await this.prisma.order.update({
         where: { id: Number(session?.metadata?.orderId) },
         data: {
           isPaid: true,
@@ -75,8 +77,10 @@ export class CheckoutService {
         },
         include: { orderItems: true },
       });
+      console.log('UPDATED ORDER: ', updatedOrder)
     }
 
+    console.log('///////////////////////////////////////////webhook end');
     return { status: 200 };
   }
 

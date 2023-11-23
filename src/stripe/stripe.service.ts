@@ -31,6 +31,9 @@ export class StripeService {
   }
 
   public createCheckoutSession(storeId: number, orderId: string) {
+    console.log('///////////////////////////////////////////createCheckoutSession start');
+    console.log('LINE ITEMS: ', this.lineItems)
+    console.log('///////////////////////////////////////////createCheckoutSession end');
     const session = this.stripe.checkout.sessions.create({
       line_items: this.lineItems,
       mode: 'payment',

@@ -38,12 +38,13 @@ export class CheckoutService {
 
   async createOrder(createOrderDto: CreateOrderDto) {
     const products = await this.productRepo.getProducts(createOrderDto.items);
-    this.stripeService.saveToLineItems(products);
+    const lineItems = this.stripeService.saveToLineItems(products);
     const order = await this.orderRepo.saveOrder(
       createOrderDto.storeId,
       createOrderDto.items,
     );
     const { url } = await this.stripeService.createCheckoutSession(
+      lineItems,
       createOrderDto.storeId,
       order.id.toString(),
     );

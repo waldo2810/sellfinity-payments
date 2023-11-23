@@ -5,7 +5,6 @@ import Stripe from 'stripe';
 @Injectable()
 export class StripeService {
   public stripe: Stripe;
-  private lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
   private event: Stripe.Event;
 
   constructor(config: ConfigService) {
@@ -16,8 +15,9 @@ export class StripeService {
   }
 
   public saveToLineItems(products: any) {
+    const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
     products.forEach((product) => {
-      this.lineItems.push({
+      lineItems.push({
         quantity: 1,
         price_data: {
           currency: 'COP',
@@ -28,14 +28,19 @@ export class StripeService {
         },
       });
     });
+    return lineItems;
   }
 
-  public createCheckoutSession(storeId: number, orderId: string) {
+  public createCheckoutSession(
+    lineItems: Stripe.Checkout.SessionCreateParams.LineItem[],
+    storeId: number,
+    orderId: string,
+  ) {
     console.log('///////////////////////////////////////////createCheckoutSession start');
-    console.log('LINE ITEMS: ', this.lineItems)
+    console.log('LINE ITEMS: ', lineItems);
     console.log('///////////////////////////////////////////createCheckoutSession end');
     const session = this.stripe.checkout.sessions.create({
-      line_items: this.lineItems,
+      line_items: lineItems,
       mode: 'payment',
       billing_address_collection: 'required',
       phone_number_collection: {
